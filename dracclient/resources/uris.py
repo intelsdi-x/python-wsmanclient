@@ -60,3 +60,24 @@ DCIM_SystemView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 
 DCIM_VirtualDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                         'DCIM_VirtualDiskView')
+
+DCIM_NICAttribute = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICAttribute')
+
+DCIM_NICString = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICString')
+
+DCIM_NICInteger = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICInteger')
+
+DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICView')
+
+DCIM_NICEnumeration = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICEnumeration')
+
+DCIM_View = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_View')
+
+DCIM_NICService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                        'DCIM_NICService')
