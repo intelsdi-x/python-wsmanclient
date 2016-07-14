@@ -11,6 +11,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from dateutil import parser
+
 """
 Common functionalities shared between different DRAC modules.
 """
@@ -92,3 +94,9 @@ def validate_integer_value(value, attr_name, error_msgs):
         int(value)
     except ValueError:
         error_msgs.append("'%s' is not an integer value" % attr_name)
+
+def parse_idrac_time(time_string):
+    # Convert "20150331192816.000000+000" to "20150331192816 +0000" so that dateutil.parser 
+    # would accept it
+    converted_time_string = time_string[:14] + ' +0' + time_string[-3:]
+    return parser.parse(converted_time_string) 

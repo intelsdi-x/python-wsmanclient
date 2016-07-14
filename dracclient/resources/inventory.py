@@ -15,6 +15,7 @@ import collections
 
 from dracclient.resources import uris
 from dracclient import utils
+from dracclient.constants import PrimaryStatus
 
 CPU = collections.namedtuple(
     'CPU',
@@ -24,13 +25,6 @@ CPU = collections.namedtuple(
 Memory = collections.namedtuple(
     'Memory',
     ['id', 'size', 'speed', 'manufacturer', 'model', 'status'])
-
-PrimaryStatus = {
-    '0': 'Unknown',
-    '1': 'OK',
-    '2': 'Degraded',
-    '3': 'Error'
-}
 
 
 class InventoryManagement(object):

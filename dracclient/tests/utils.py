@@ -103,6 +103,12 @@ CPUEnumerations = {
     }
 }
 
+PSUEnumerations = {
+    uris.DCIM_PowerSupplyView: {
+        'ok': load_wsman_xml('power-supply-enumeration-enum-ok')
+    }
+}
+
 JobEnumerations = {
     uris.DCIM_LifecycleJob: {
         'ok': load_wsman_xml('lifecycle_job-enum-ok'),

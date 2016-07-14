@@ -21,3 +21,11 @@ HEALTH_UNKNOWN = 'UNKNOWN'
 HEALTH_OK = 'OK'
 HEALTH_DEGRADED = 'DEGRADED/WARNING'
 HEALTH_ERROR = 'ERROR'
+
+# Common status for DCIM_PowerSupplyView and DCIM_CPUView
+PrimaryStatus = {
+    '0': 'Unknown',
+    '1': 'OK',
+    '2': 'Degraded',
+    '3': 'Error'
+}

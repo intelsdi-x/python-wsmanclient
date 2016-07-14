@@ -81,6 +81,17 @@ class DRACClient(object):
         """
         self._power_mgmt.set_power_state(target_state)
 
+    def list_power_supply_units(self):
+        """Returns the list of PSUs
+
+        :returns: list of BootMode objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._power_mgmt.list_power_supply_units()
+
     def list_boot_modes(self):
         """Returns the list of boot modes
 

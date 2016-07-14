@@ -28,6 +28,9 @@ DCIM_BIOSService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 DCIM_BIOSString = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                    'DCIM_BIOSString')
 
+DCIM_PowerSupplyView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                   'DCIM_PowerSupplyView')
+
 DCIM_BootConfigSetting = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                           'DCIM_BootConfigSetting')
 

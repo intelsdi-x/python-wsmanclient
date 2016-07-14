@@ -21,6 +21,7 @@ from dracclient.resources import lifecycle_controller
 from dracclient.resources import uris
 from dracclient import utils
 from dracclient import wsman
+from dracclient.constants import PrimaryStatus
 
 LOG = logging.getLogger(__name__)
 
@@ -62,6 +63,10 @@ HEALTH_STATES = {
     '25': constants.HEALTH_ERROR,
 }
 
+# See iDRAC Service Module - Windows Management Instrumentation.pdf for more fields available
+PSU = collections.namedtuple(
+    'PSU',
+    ['id', 'description', 'last_system_inventory_time', 'last_update_time', 'primary_status'])
 
 class PowerManagement(object):
 
@@ -140,6 +145,36 @@ class PowerManagement(object):
 
         self.client.invoke(uris.DCIM_ComputerSystem, 'RequestStateChange',
                            selectors, properties)
+
+    def list_power_supply_units(self):
+        """Returns the list of PSUs
+
+        :returns: a list of PSU objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+        """
+
+        doc = self.client.enumerate(uris.DCIM_PowerSupplyView)
+
+        psus = utils.find_xml(doc, 'DCIM_PowerSupplyView',
+                              uris.DCIM_PowerSupplyView,
+                              find_all=True)
+
+        return [self._parse_psus(psu) for psu in psus]
+
+    def _parse_psus(self, psu):
+        return PSU(
+            id=self._get_psu_attr(psu, 'FQDD'),
+            description=self._get_psu_attr(psu, 'DeviceDescription'),
+            last_system_inventory_time=utils.parse_idrac_time(self._get_psu_attr(psu, 'LastSystemInventoryTime')),
+            last_update_time=utils.parse_idrac_time(self._get_psu_attr(psu, 'LastUpdateTime')),
+            primary_status=PrimaryStatus[self._get_psu_attr(psu, 'PrimaryStatus')]
+        )
+
+    def _get_psu_attr(self, psu, attr_name):
+        return utils.get_wsman_resource_attr(
+            psu, uris.DCIM_PowerSupplyView, attr_name)
 
 
 class BootManagement(object):
