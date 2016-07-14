@@ -29,7 +29,7 @@ def load_wsman_xml(name):
     """Helper function to load a WSMan XML response from a file."""
 
     with open(os.path.join(os.path.dirname(__file__), 'wsman_mocks',
-              '%s.xml' % name), 'r') as f:
+                           '%s.xml' % name), 'r') as f:
         xml_body = f.read()
 
     return xml_body

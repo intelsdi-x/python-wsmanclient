@@ -67,6 +67,13 @@ class ClientPowerManagementTestCase(base.BaseTest):
         self.assertRaises(exceptions.InvalidParameterValue,
                           self.drac_client.set_power_state, 'foo')
 
+    def test_get_health(self, mock_requests):
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.BIOSEnumerations[uris.DCIM_ComputerSystem]['ok'])
+
+        self.assertEqual('OK', self.drac_client.get_health_state())
+
 
 class ClientBootManagementTestCase(base.BaseTest):
 
@@ -1130,7 +1137,7 @@ class ClientCPUTestCase(base.BaseTest):
             status='OK',
             turbo_enabled=True,
             vt_enabled=True
-            )]
+        )]
 
         mock_requests.post(
             'https://1.2.3.4:443/wsman',
@@ -1157,7 +1164,7 @@ class ClientMemoryestCase(base.BaseTest):
             manufacturer='Samsung',
             model='DDR4 DIMM',
             status='OK',
-            )]
+        )]
 
         mock_requests.post(
             'https://1.2.3.4:443/wsman',

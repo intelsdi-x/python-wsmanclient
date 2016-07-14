@@ -69,8 +69,8 @@ class InventoryManagement(object):
             status=PrimaryStatus[self._get_cpu_attr(cpu, 'PrimaryStatus')],
             turbo_enabled=bool(self._get_cpu_attr(cpu, 'TurboModeEnabled')),
             vt_enabled=bool(self._get_cpu_attr(cpu,
-                            'VirtualizationTechnologyEnabled'))
-            )
+                                               'VirtualizationTechnologyEnabled'))
+        )
 
     def _get_cpu_attr(self, cpu, attr_name):
         return utils.get_wsman_resource_attr(

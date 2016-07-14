@@ -156,6 +156,17 @@ class DRACClient(object):
         """
         return self._bios_cfg.set_bios_settings(settings)
 
+    def get_health_state(self):
+        """Returns the current health state of the node
+
+        :returns: health state of the node, one of 'UNKNOWN', 'OK', 'DEGRADED/WARNING' or 'ERROR'
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._power_mgmt.get_health_state()
+
     def list_jobs(self, only_unfinished=False):
         """Returns a list of jobs from the job queue
 

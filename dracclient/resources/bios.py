@@ -53,6 +53,15 @@ BootDevice = collections.namedtuple(
     ['id',  'boot_mode', 'current_assigned_sequence',
      'pending_assigned_sequence', 'bios_boot_string'])
 
+# http://en.community.dell.com/dell-groups/dtcmedia/m/mediagallery/20066940/download,
+# p. 11
+HEALTH_STATES = {
+    '0': constants.HEALTH_UNKNOWN,
+    '5': constants.HEALTH_OK,
+    '10': constants.HEALTH_DEGRADED,
+    '25': constants.HEALTH_ERROR,
+}
+
 
 class PowerManagement(object):
 
@@ -82,6 +91,26 @@ class PowerManagement(object):
                                        uris.DCIM_ComputerSystem)
 
         return POWER_STATES[enabled_state.text]
+
+    def get_health_state(self):
+        """Returns the current health state of the node
+
+        :returns: health state of the node, one of 'UNKNOWN', 'OK', 'DEGRADED/WARNING' or 'ERROR'
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+
+        filter_query = ('select HealthState from '
+                        'DCIM_ComputerSystem where Name="srv:system"')
+        doc = self.client.enumerate(uris.DCIM_ComputerSystem,
+                                    filter_query=filter_query)
+        health_state = utils.find_xml(doc, 'HealthState',
+                                      uris.DCIM_ComputerSystem)
+
+        print(health_state.text)
+        return HEALTH_STATES[health_state.text]
 
     def set_power_state(self, target_state):
         """Turns the server power on/off or do a reboot
