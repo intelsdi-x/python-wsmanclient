@@ -24,6 +24,7 @@ from dracclient.resources import job
 from dracclient.resources import lifecycle_controller
 from dracclient.resources import raid
 from dracclient.resources import uris
+from dracclient.resources import nic
 from dracclient import utils
 from dracclient import wsman
 
@@ -34,6 +35,7 @@ class DRACClient(object):
     """Client for managing DRAC nodes"""
 
     BIOS_DEVICE_FQDD = 'BIOS.Setup.1-1'
+    NIC_DEVICE_FQDD = 'NIC.Setup.1-1'
 
     def __init__(self, host, username, password, port=443, path='/wsman',
                  protocol='https'):
@@ -52,6 +54,8 @@ class DRACClient(object):
         self._power_mgmt = bios.PowerManagement(self.client)
         self._boot_mgmt = bios.BootManagement(self.client)
         self._bios_cfg = bios.BIOSConfiguration(self.client)
+        self._nic_cfg = nic.NICConfiguration(self.client)
+        self._nic_mgmt = nic.NICManagement(self.client)
         self._raid_mgmt = raid.RAIDManagement(self.client)
         self._inventory_mgmt = inventory.InventoryManagement(self.client)
 
@@ -171,12 +175,56 @@ class DRACClient(object):
         """Returns the current health state of the node
 
         :returns: health state of the node, one of 'UNKNOWN', 'OK', 'DEGRADED/WARNING' or 'ERROR'
+        """
+        return self._power_mgmt.get_health_state()
+
+    def list_nic_interfaces(self):
+        """Returns the list of nic interfaces
+
+        :returns: a list of NICinterfaces objects
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
                  interface
         """
-        return self._power_mgmt.get_health_state()
+        return self._nic_mgmt.list_nic_interfaces()
+
+    def list_nic_settings(self, interface):
+        """List the NIC configuration settings
+
+        :returns: a dictionary with the NIC settings using its name as the
+                  key. The attributes are either NICEnumerableAttribute,
+                 NICStringAttribute or NICIntegerAttribute objects.
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._nic_cfg.list_nic_settings(interface)
+
+    def set_nic_settings(self, interface, settings):
+        """Sets the NIC configuration
+
+        To be more precise, it sets the pending_value parameter for each of the
+        attributes passed in. For the values to be applied, a config job must
+        be created and the node must be rebooted.
+
+        :param settings: a dictionary containing the proposed values, with
+                         each key being the name of attribute and the value
+                         being the proposed value.
+        :returns: a dictionary containing the commit_needed key with a boolean
+                  value indicating whether a config job must be created for the
+                  values to be applied.
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        :raises: DRACUnexpectedReturnValue on return value mismatch
+        :raises: InvalidParameterValue on invalid NIC attribute
+        """
+        return self._nic_cfg.set_nic_settings(interface, settings)
+
+>>>>>> > nic_support
 
     def list_jobs(self, only_unfinished=False):
         """Returns a list of jobs from the job queue

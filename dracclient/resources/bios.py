@@ -63,10 +63,12 @@ HEALTH_STATES = {
     '25': constants.HEALTH_ERROR,
 }
 
-# See iDRAC Service Module - Windows Management Instrumentation.pdf for more fields available
+# See iDRAC Service Module - Windows Management Instrumentation.pdf for
+# more fields available
 PSU = collections.namedtuple(
     'PSU',
     ['id', 'description', 'last_system_inventory_time', 'last_update_time', 'primary_status'])
+
 
 class PowerManagement(object):
 
@@ -167,9 +169,12 @@ class PowerManagement(object):
         return PSU(
             id=self._get_psu_attr(psu, 'FQDD'),
             description=self._get_psu_attr(psu, 'DeviceDescription'),
-            last_system_inventory_time=utils.parse_idrac_time(self._get_psu_attr(psu, 'LastSystemInventoryTime')),
-            last_update_time=utils.parse_idrac_time(self._get_psu_attr(psu, 'LastUpdateTime')),
-            primary_status=PrimaryStatus[self._get_psu_attr(psu, 'PrimaryStatus')]
+            last_system_inventory_time=utils.parse_idrac_time(
+                self._get_psu_attr(psu, 'LastSystemInventoryTime')),
+            last_update_time=utils.parse_idrac_time(
+                self._get_psu_attr(psu, 'LastUpdateTime')),
+            primary_status=PrimaryStatus[
+                self._get_psu_attr(psu, 'PrimaryStatus')]
         )
 
     def _get_psu_attr(self, psu, attr_name):

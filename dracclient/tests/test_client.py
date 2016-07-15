@@ -78,8 +78,10 @@ class ClientPowerManagementTestCase(base.BaseTest):
         expected_psu = [bios.PSU(
             id='PSU.Slot.1',
             description='Power Supply 1',
-            last_system_inventory_time=utils.parse_idrac_time('20160711135039.000000+000'),
-            last_update_time=utils.parse_idrac_time('20160714202232.000000+000'),
+            last_system_inventory_time=utils.parse_idrac_time(
+                '20160711135039.000000+000'),
+            last_update_time=utils.parse_idrac_time(
+                '20160714202232.000000+000'),
             primary_status='OK'
         )]
 
@@ -90,6 +92,7 @@ class ClientPowerManagementTestCase(base.BaseTest):
         self.assertEqual(
             expected_psu,
             self.drac_client.list_power_supply_units())
+
 
 class ClientBootManagementTestCase(base.BaseTest):
 
