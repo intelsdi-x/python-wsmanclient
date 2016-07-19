@@ -59,8 +59,8 @@ class ThinkServerClient(BaseClient):
         self._power_mgmt = bios.PowerManagement(self.client)
         self._boot_mgmt = bios.BootManagement(self.client)
         self._bios_cfg = bios.BIOSConfiguration(self.client)
-        self._nic_cfg = nic.NICConfiguration(self.client)
-        self._nic_mgmt = nic.NICManagement(self.client)
+        #  self._nic_cfg = nic.NICConfiguration(self.client)
+        #  self._nic_mgmt = nic.NICManagement(self.client)
         self._raid_mgmt = raid.RAIDManagement(self.client)
         self._inventory_mgmt = inventory.InventoryManagement(self.client)
 

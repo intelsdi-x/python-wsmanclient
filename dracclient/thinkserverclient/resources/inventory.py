@@ -13,21 +13,12 @@
 
 import collections
 
-#  from dracclient.resources import uris
 from dracclient.thinkserverclient.resources import uris
 from dracclient import utils
 from dracclient import wsman
 from dracclient.constants import PrimaryStatus
 
-CPU = collections.namedtuple(
-    'CPU',
-    ['id', 'cores', 'speed', 'ht_enabled', 'model', 'status', 'turbo_enabled',
-     'vt_enabled'])
-
-Memory = collections.namedtuple(
-    'Memory',
-    ['id', 'size', 'speed', 'manufacturer', 'model', 'status'])
-
+from dracclient.model import CPU
 
 class InventoryManagement(object):
 
@@ -58,19 +49,9 @@ class InventoryManagement(object):
         return [self._parse_cpus(cpu) for cpu in cpus]
 
     def _parse_cpus(self, cpu):
-        return CPU(
-            id=self._get_cpu_attr(cpu, 'DeviceID'),
-            cores=None,
-            speed=None,
-            ht_enabled=None,
-            model=None,
             # status=PrimaryStatus[self._get_cpu_attr(cpu, 'CPUStatus')], #
             # TODO(antoni): Add CPUStatus dict
-            # TODO(antoni): Add CPUStatus dict
-            status=self._get_cpu_attr(cpu, 'CPUStatus'),
-            turbo_enabled=None,
-            vt_enabled=None
-        )
+        return CPU(self._get_cpu_attr(cpu, 'DeviceID'),status=self._get_cpu_attr(cpu, 'CPUStatus'))
 
     def _get_cpu_attr(self, cpu, attr_name):
         return 'TODO'
