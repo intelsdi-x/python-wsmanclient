@@ -1,4 +1,4 @@
-Welcome to python-dracclient's documentation!
+Welcome to python-wsmanclient.s documentation!
 =============================================
 
 .. toctree::

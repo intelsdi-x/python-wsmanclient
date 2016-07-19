@@ -36,7 +36,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'python-dracclient'
+project = u'python-wsmanclient.
 copyright = u'OpenStack Foundation'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
