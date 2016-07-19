@@ -44,7 +44,10 @@ class WSManRequestFailure(BaseClientException):
 
 
 class WSManInvalidResponse(BaseClientException):
-    msg_fmt = ('Invalid response received. Status code: "%(status_code)s", '
+    def __init__(self, status_code, reason):
+        self.status_code = status_code
+        self.reason = reason
+        msg_fmt = ('Invalid response received. Status code: "%(status_code)s", '
                'reason: "%(reason)s"')
 
 

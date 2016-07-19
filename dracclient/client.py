@@ -224,8 +224,6 @@ class DRACClient(object):
         """
         return self._nic_cfg.set_nic_settings(interface, settings)
 
->>>>>> > nic_support
-
     def list_jobs(self, only_unfinished=False):
         """Returns a list of jobs from the job queue
 

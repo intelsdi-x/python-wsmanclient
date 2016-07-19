@@ -1,4 +1,4 @@
-#
+
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
@@ -28,9 +28,11 @@ NS_WS_ADDR_ANONYM_ROLE = ('http://schemas.xmlsoap.org/ws/2004/08/addressing/'
                           'role/anonymous')
 NS_WSMAN = 'http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd'
 NS_WSMAN_ENUM = 'http://schemas.xmlsoap.org/ws/2004/09/enumeration'
+NS_WSMB = 'http://schemas.dmtf.org/wbem/wsman/1/cimbinding.xsd'
 
 NS_MAP = {'s': NS_SOAP_ENV,
           'wsa': NS_WS_ADDR,
+          'wsen': NS_WSMAN_ENUM,
           'wsman': NS_WSMAN}
 
 FILTER_DIALECT_MAP = {'cql': 'http://schemas.dmtf.org/wbem/cql/1/dsp0202.pdf',

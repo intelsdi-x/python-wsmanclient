@@ -84,3 +84,73 @@ DCIM_View = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 
 DCIM_NICService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                    'DCIM_NICService')
+
+#  CIM_BIOSEnumeration = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                        #  'CIM_BIOSEnumeration')
+
+#  CIM_BIOSInteger = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                    #  'CIM_BIOSInteger')
+
+#  CIM_BIOSService = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                    #  'CIM_BIOSService')
+
+#  CIM_BIOSString = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   #  'CIM_BIOSString')
+
+#  CIM_PowerSupplyView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                        #  'CIM_PowerSupplyView')
+
+#  CIM_BootConfigSetting = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                          #  'CIM_BootConfigSetting')
+
+#  CIM_BootSourceSetting = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                          #  'CIM_BootSourceSetting')
+
+CIM_ComputerSystem = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                       'CIM_ComputerSystem')
+
+#  CIM_ControllerView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                       #  'CIM_ControllerView')
+
+#  CIM_CPUView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                #  'CIM_CPUView')
+
+#  CIM_LifecycleJob = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                     #  'CIM_LifecycleJob')
+
+#  CIM_MemoryView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   #  'CIM_MemoryView')
+
+#  CIM_PhysicalDiskView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                         #  'CIM_PhysicalDiskView')
+
+#  CIM_RAIDService = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                    #  'CIM_RAIDService')
+
+#  CIM_SystemView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   #  'CIM_SystemView')
+
+#  CIM_VirtualDiskView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                        #  'CIM_VirtualDiskView')
+
+#  CIM_NICAttribute = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                     #  'CIM_NICAttribute')
+
+#  CIM_NICString = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                  #  'CIM_NICString')
+
+#  CIM_NICInteger = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   #  'CIM_NICInteger')
+
+#  CIM_NICView = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                #  'CIM_NICView')
+
+#  CIM_NICEnumeration = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                       #  'CIM_NICEnumeration')
+
+#  CIM_View = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+             #  'CIM_View')
+
+#  CIM_NICService = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   #  'CIM_NICService')
+
