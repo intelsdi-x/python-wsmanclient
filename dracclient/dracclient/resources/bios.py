@@ -93,9 +93,9 @@ class PowerManagement(object):
         filter_query = ('select EnabledState from '
                         'DCIM_ComputerSystem where Name="srv:system"')
         #  filter_query = ('select EnabledState from '
-                        #  'CIM_ComputerSystem')
+        #  'CIM_ComputerSystem')
         #  doc = self.client.enumerate(uris.CIM_ComputerSystem,
-                                    #  filter_query=filter_query)
+        #  filter_query=filter_query)
         doc = self.client.enumerate(uris.DCIM_ComputerSystem,
                                     filter_query=filter_query)
         enabled_state = utils.find_xml(doc, 'EnabledState',

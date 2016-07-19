@@ -36,10 +36,10 @@ NS_MAP = {'s': NS_SOAP_ENV,
           'wsman': NS_WSMAN}
 
 NS_MAP_COMPUTER_SYSTEM = {'s': NS_SOAP_ENV,
-          'wsa': NS_WS_ADDR,
-          'wsen': NS_WSMAN_ENUM,
-          'wsman': NS_WSMAN,
-          'wsinst': 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_HostComputerSystem'}
+                          'wsa': NS_WS_ADDR,
+                          'wsen': NS_WSMAN_ENUM,
+                          'wsman': NS_WSMAN,
+                          'wsinst': 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_HostComputerSystem'}
 
 FILTER_DIALECT_MAP = {'cql': 'http://schemas.dmtf.org/wbem/cql/1/dsp0202.pdf',
                       'wql': 'http://schemas.microsoft.com/wbem/wsman/1/WQL'}

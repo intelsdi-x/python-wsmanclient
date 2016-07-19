@@ -92,12 +92,13 @@ class PowerManagement(object):
 
         doc = self.client.enumerate(uris.CIM_ComputerSystem)
         #  nmmap = {
-                 #  's' : 'http://www.w3.org/2003/05/soap-envelope',
-                 #  'wsinst': 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_HostComputerSystem',
-                 #  'wsen' : 'http://schemas.xmlsoap.org/ws/2004/09/enumeration',
-                 #  'wsman':'http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd'
-                #  }
-        enabled_state = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:EnabledState', wsman.NS_MAP_COMPUTER_SYSTEM)
+        #  's' : 'http://www.w3.org/2003/05/soap-envelope',
+        #  'wsinst': 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_HostComputerSystem',
+        #  'wsen' : 'http://schemas.xmlsoap.org/ws/2004/09/enumeration',
+        #  'wsman':'http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd'
+        #  }
+        enabled_state = doc.find(
+            './/s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:EnabledState', wsman.NS_MAP_COMPUTER_SYSTEM)
         return POWER_STATES[enabled_state.text]
 
     def get_health_state(self):
@@ -111,17 +112,19 @@ class PowerManagement(object):
         """
 
         doc = self.client.enumerate(uris.CIM_ComputerSystem)
-        health_state = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:HealthState', wsman.NS_MAP_COMPUTER_SYSTEM)
-                                      #  uris.DCIM_ComputerSystem)
+        health_state = doc.find(
+            './/s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:HealthState', wsman.NS_MAP_COMPUTER_SYSTEM)
+        #  uris.DCIM_ComputerSystem)
 
         #  print(health_state.text)
         return HEALTH_STATES[health_state.text]
 
     def set_power_state(self, target_state):
         raise NotImplementedError
-        
+
     def list_power_supply_units(self):
         raise NotImplementedError
+
 
 class BootManagement(object):
 
@@ -134,11 +137,13 @@ class BootManagement(object):
 
     def list_boot_modes(self):
         raise NotImplementedError
+
     def list_boot_devices(self):
         raise NotImplementedError
-        
+
     def change_boot_device_order(self, boot_mode, boot_device_list):
         raise NotImplementedError
+
 
 class BIOSAttribute(object):
     """Generic BIOS attribute class"""
@@ -233,10 +238,10 @@ class BIOSStringAttribute(BIOSAttribute):
     @classmethod
     def parse(cls, bios_attr_xml):
         raise NotImplementedError
-        
+
     def validate(self, new_value):
         raise NotImplementedError
-        
+
 
 class BIOSIntegerAttribute(BIOSAttribute):
     """Integer BIOS attribute class"""
@@ -266,6 +271,7 @@ class BIOSIntegerAttribute(BIOSAttribute):
 
     def validate(self, new_value):
         raise NotImplementedError
+
 
 class BIOSConfiguration(object):
 

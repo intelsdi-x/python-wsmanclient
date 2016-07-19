@@ -522,4 +522,3 @@ class DRACClient(BaseClient):
         """
 
         return self._inventory_mgmt.list_memory()
-

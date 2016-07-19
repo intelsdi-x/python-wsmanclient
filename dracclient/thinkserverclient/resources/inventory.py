@@ -47,12 +47,13 @@ class InventoryManagement(object):
         :raises: DRACOperationFailed on error reported back by the DRAC
         """
         CIM_Processor = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-                'CIM_Processor')
+                         'CIM_Processor')
 
         doc = self.client.enumerate(uris.CIM_Processor)
         #  print(doc.find('.//s:Envelope', wsman.NS_MAP_COMPUTER_SYSTEM))
         health_state = 1
-        cpus = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items', wsman.NS_MAP_COMPUTER_SYSTEM)
+        cpus = doc.find(
+            './/s:Body/wsen:EnumerateResponse/wsman:Items', wsman.NS_MAP_COMPUTER_SYSTEM)
 
         return [self._parse_cpus(cpu) for cpu in cpus]
 
@@ -63,8 +64,10 @@ class InventoryManagement(object):
             speed=None,
             ht_enabled=None,
             model=None,
-            #  status=PrimaryStatus[self._get_cpu_attr(cpu, 'CPUStatus')], # TODO(antoni): Add CPUStatus dict
-            status=self._get_cpu_attr(cpu, 'CPUStatus'), # TODO(antoni): Add CPUStatus dict
+            # status=PrimaryStatus[self._get_cpu_attr(cpu, 'CPUStatus')], #
+            # TODO(antoni): Add CPUStatus dict
+            # TODO(antoni): Add CPUStatus dict
+            status=self._get_cpu_attr(cpu, 'CPUStatus'),
             turbo_enabled=None,
             vt_enabled=None
         )
@@ -72,7 +75,7 @@ class InventoryManagement(object):
     def _get_cpu_attr(self, cpu, attr_name):
         return 'TODO'
         #  return utils.get_wsman_resource_attr(
-            #  cpu, uris.DCIM_CPUView, attr_name)
+        #  cpu, uris.DCIM_CPUView, attr_name)
 
     def list_memory(self):
         raise NotImplementedError
@@ -87,24 +90,24 @@ class InventoryManagement(object):
         #  doc = self.client.enumerate(uris.DCIM_MemoryView)
 
         #  installed_memory = utils.find_xml(doc, 'DCIM_MemoryView',
-                                          #  uris.DCIM_MemoryView,
-                                          #  find_all=True)
+        #  uris.DCIM_MemoryView,
+        #  find_all=True)
 
         #  return [self._parse_memory(memory) for memory in installed_memory]
 
     def _parse_memory(self, memory):
         pass
         #  return Memory(id=self._get_memory_attr(memory, 'FQDD'),
-                      #  size=int(self._get_memory_attr(memory, 'Size')),
-                      #  speed=int(self._get_memory_attr(memory, 'Speed')),
-                      #  manufacturer=self._get_memory_attr(memory,
-                                                         #  'Manufacturer'),
-                      #  model=self._get_memory_attr(memory, 'Model'),
-                      #  status=PrimaryStatus[self._get_memory_attr(
-                          #  memory,
-                          #  'PrimaryStatus')])
+        #  size=int(self._get_memory_attr(memory, 'Size')),
+        #  speed=int(self._get_memory_attr(memory, 'Speed')),
+        #  manufacturer=self._get_memory_attr(memory,
+        #  'Manufacturer'),
+        #  model=self._get_memory_attr(memory, 'Model'),
+        #  status=PrimaryStatus[self._get_memory_attr(
+        #  memory,
+        #  'PrimaryStatus')])
 
     def _get_memory_attr(self, memory, attr_name):
         pass
         #  return utils.get_wsman_resource_attr(memory, uris.DCIM_MemoryView,
-                                             #  attr_name)
+        #  attr_name)

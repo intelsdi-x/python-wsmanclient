@@ -19,22 +19,22 @@ ThinkServer WS-Man API.
 # TODO(antoni): Reorder alphabetically or in some other way
 
 CIM_ComputerSystem = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_ComputerSystem')
+                      'CIM_ComputerSystem')
 
 CIM_IPAssignmentSettingData = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_IPAssignmentSettingData')
+                               'CIM_IPAssignmentSettingData')
 
 CIM_Processor = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_Processor')
+                 'CIM_Processor')
 
 CIM_PhysicalMemory = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_PhysicalMemory')
+                      'CIM_PhysicalMemory')
 
 CIM_BootConfigSetting = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_BootConfigSetting')
+                         'CIM_BootConfigSetting')
 
 CIM_PowerSupply = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_PowerSupply')
+                   'CIM_PowerSupply')
 
 CIM_NetworkPort = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-        'CIM_NetworkPort')
+                   'CIM_NetworkPort')

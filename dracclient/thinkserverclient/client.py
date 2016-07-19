@@ -51,7 +51,7 @@ class ThinkServerClient(BaseClient):
         :param path: path for accessing the DRAC interface
         :param protocol: protocol for accessing the DRAC interface
         """
-        
+
         # TODO: Move to ABC class's __init__
         self.client = WSManClient(host, username, password, port, path,
                                   protocol)

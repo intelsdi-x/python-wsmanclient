@@ -53,7 +53,7 @@ class BaseClient(object):
         :param protocol: protocol for accessing the DRAC interface
         """
         return
-        
+
     @abc.abstractmethod
     def get_power_state(self):
         """Returns the current power state of the node
