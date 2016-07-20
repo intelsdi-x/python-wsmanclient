@@ -13,9 +13,10 @@
 
 import collections
 
-from wsmanclient.dracclient.resources import uris
 from wsmanclient import utils
 from wsmanclient.dracclient import constants
+from wsmanclient.dracclient.resources import uris
+
 
 class InventoryManagement(object):
 

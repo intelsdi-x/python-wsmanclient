@@ -15,18 +15,13 @@
 Wrapper for pywsman.Client
 """
 
-from wsmanclient.base_client import BaseClient
 import logging
 
+from wsmanclient import exceptions, utils, wsman
+from wsmanclient.base_client import BaseClient
+from wsmanclient.thinkserverclient.resources import (bios, inventory, job, nic,
+                                                     uris)
 from wsmanclient.wsman import WSManClient
-from wsmanclient import exceptions
-from wsmanclient import wsman
-from wsmanclient.thinkserverclient.resources import bios
-from wsmanclient.thinkserverclient.resources import inventory
-from wsmanclient.thinkserverclient.resources import job
-from wsmanclient.thinkserverclient.resources import uris
-from wsmanclient.thinkserverclient.resources import nic
-from wsmanclient import utils
 
 LOG = logging.getLogger(__name__)
 

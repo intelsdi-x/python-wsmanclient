@@ -1,5 +1,6 @@
 import json
 
+
 class StatusedResource(object):
     """
     An interface defining resource with an id and health status ('HealthStatus')

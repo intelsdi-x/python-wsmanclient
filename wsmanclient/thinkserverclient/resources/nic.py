@@ -2,12 +2,9 @@ import collections
 import logging
 import re
 
-from wsmanclient import exceptions
+from wsmanclient import exceptions, utils, wsman
+from wsmanclient.model import NICInterface
 from wsmanclient.thinkserverclient.resources import uris
-from wsmanclient import utils
-from wsmanclient import wsman
-
-from wsmanclient.model import NICInterface 
 
 LOG = logging.getLogger(__name__)
 

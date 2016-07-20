@@ -15,12 +15,9 @@ import collections
 import logging
 import re
 
-from wsmanclient import exceptions
+from wsmanclient import exceptions, utils, wsman
 from wsmanclient.dracclient import constants
-from wsmanclient.dracclient.resources import lifecycle_controller
-from wsmanclient.dracclient.resources import uris
-from wsmanclient import utils
-from wsmanclient import wsman
+from wsmanclient.dracclient.resources import lifecycle_controller, uris
 
 LOG = logging.getLogger(__name__)
 

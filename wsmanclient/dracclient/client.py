@@ -17,17 +17,12 @@ Wrapper for pywsman.Client
 
 import logging
 
-from wsmanclient.wsman import WSManClient
+from wsmanclient import exceptions, utils
 from wsmanclient.base_client import BaseClient
-from wsmanclient import exceptions
-from wsmanclient.dracclient.resources import bios
-from wsmanclient.dracclient.resources import inventory
-from wsmanclient.dracclient.resources import job
-from wsmanclient.dracclient.resources import lifecycle_controller
-from wsmanclient.dracclient.resources import raid
-from wsmanclient.dracclient.resources import uris
-from wsmanclient.dracclient.resources import nic
-from wsmanclient import utils
+from wsmanclient.dracclient.resources import (bios, inventory, job,
+                                              lifecycle_controller, nic, raid,
+                                              uris)
+from wsmanclient.wsman import WSManClient
 
 LOG = logging.getLogger(__name__)
 

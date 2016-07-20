@@ -13,9 +13,8 @@
 
 import collections
 
-from wsmanclient import exceptions
+from wsmanclient import exceptions, utils
 from wsmanclient.dracclient.resources import uris
-from wsmanclient import utils
 
 RAID_LEVELS = {
     'non-raid': '1',

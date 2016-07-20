@@ -13,9 +13,9 @@
 
 import collections
 
+from wsmanclient import utils, wsman
 from wsmanclient.dracclient.resources import uris
-from wsmanclient import utils
-from wsmanclient import wsman
+
 
 class JobManagement(object):
 

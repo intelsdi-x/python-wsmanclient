@@ -11,14 +11,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import exceptions
 import logging
 import uuid
 
-from lxml import etree as ElementTree
 import requests
 import requests.exceptions
-
-import exceptions
+from lxml import etree as ElementTree
 
 LOG = logging.getLogger(__name__)
 

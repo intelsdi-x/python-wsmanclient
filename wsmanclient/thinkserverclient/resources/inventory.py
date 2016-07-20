@@ -13,12 +13,11 @@
 
 import collections
 
-from wsmanclient.thinkserverclient.resources import uris
-from wsmanclient import utils
-from wsmanclient import wsman
-from wsmanclient.thinkserverclient import constants
-
+from wsmanclient import utils, wsman
 from wsmanclient.model import CPU, Memory
+from wsmanclient.thinkserverclient import constants
+from wsmanclient.thinkserverclient.resources import uris
+
 
 class InventoryManagement(object):
 

@@ -11,24 +11,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import random
 import re
 
 import lxml.etree
 import mock
-import random
 import requests_mock
-
 import wsmanclient.client
-from wsmanclient import exceptions
-from wsmanclient.resources import bios
-from wsmanclient.resources import inventory
 import wsmanclient.resources.job
-from wsmanclient.resources import lifecycle_controller
-from wsmanclient.resources import raid
-from wsmanclient.resources import uris
-from wsmanclient.tests import base
+from wsmanclient import exceptions, utils
+from wsmanclient.resources import (bios, inventory, lifecycle_controller, raid,
+                                   uris)
 from wsmanclient.tests import utils as test_utils
-from wsmanclient import utils
+from wsmanclient.tests import base
 
 
 @requests_mock.Mocker()

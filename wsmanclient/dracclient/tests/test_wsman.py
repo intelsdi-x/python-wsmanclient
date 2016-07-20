@@ -18,11 +18,10 @@ import lxml.etree
 import lxml.objectify
 import mock
 import requests_mock
-
-from wsmanclient import exceptions
-from wsmanclient.tests import base
-from wsmanclient.tests import utils as test_utils
 import wsmanclient.wsman
+from wsmanclient import exceptions
+from wsmanclient.tests import utils as test_utils
+from wsmanclient.tests import base
 
 
 class ClientTestCase(base.BaseTest):
