@@ -102,7 +102,8 @@ class PowerManagement(object):
     def _parse_psus(self, psu):
         return PSU(
             self._get_psu_attr(psu, 'DeviceID'),
-            constants._get_health_state(self._get_psu_attr(psu, 'HealthState'))
+            None
+            #  constants._get_health_state(self._get_psu_attr(psu, 'HealthState'))
         )
 
     def _get_psu_attr(self, psu, attr_name):
@@ -123,7 +124,7 @@ class BootManagement(object):
 
     def list_boot_devices(self):
         raise NotImplementedError
-
+    
     def change_boot_device_order(self, boot_mode, boot_device_list):
         raise NotImplementedError
 

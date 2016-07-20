@@ -70,7 +70,8 @@ class InventoryManagement(object):
 
     def _parse_memory(self, memory):
         return Memory(self._get_memory_attr(memory, 'ElementName'),
-                status=constants.HealthState[self._get_memory_attr(memory, 'HealthState')])
+                None)
+                #  constants.HealthState[self._get_memory_attr(memory, 'HealthState')])
 
     def _get_memory_attr(self, memory, attr_name):
         return utils.get_wsman_wsinst_resource_attr(memory, uris.CIM_PhysicalMemory, attr_name)
