@@ -15,17 +15,7 @@ import collections
 
 from wsmanclient.dracclient.resources import uris
 from wsmanclient import utils
-from wsmanclient.constants import PrimaryStatus
-
-CPU = collections.namedtuple(
-    'CPU',
-    ['id', 'cores', 'speed', 'ht_enabled', 'model', 'status', 'turbo_enabled',
-     'vt_enabled'])
-
-Memory = collections.namedtuple(
-    'Memory',
-    ['id', 'size', 'speed', 'manufacturer', 'model', 'status'])
-
+from wsmanclient.dracclient import constants
 
 class InventoryManagement(object):
 

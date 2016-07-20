@@ -16,9 +16,9 @@ import collections
 from wsmanclient.thinkserverclient.resources import uris
 from wsmanclient import utils
 from wsmanclient import wsman
-from wsmanclient.constants import PrimaryStatus
+from wsmanclient.thinkserverclient import constants
 
-from wsmanclient.model import CPU
+from wsmanclient.model import CPU, Memory
 
 class InventoryManagement(object):
 
@@ -37,29 +37,22 @@ class InventoryManagement(object):
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
         """
-        CIM_Processor = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
-                         'CIM_Processor')
 
         doc = self.client.enumerate(uris.CIM_Processor)
-        #  print(doc.find('.//s:Envelope', wsman.NS_MAP_COMPUTER_SYSTEM))
-        health_state = 1
-        cpus = doc.find(
-            './/s:Body/wsen:EnumerateResponse/wsman:Items', wsman.NS_MAP_COMPUTER_SYSTEM)
+
+        cpus = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items',
+                wsman.NS_MAP)
 
         return [self._parse_cpus(cpu) for cpu in cpus]
 
     def _parse_cpus(self, cpu):
-            # status=PrimaryStatus[self._get_cpu_attr(cpu, 'CPUStatus')], #
-            # TODO(antoni): Add CPUStatus dict
-        return CPU(self._get_cpu_attr(cpu, 'DeviceID'),status=self._get_cpu_attr(cpu, 'CPUStatus'))
+        return CPU(self._get_cpu_attr(cpu, 'DeviceID'),
+                status=constants.CPUStatus[self._get_cpu_attr(cpu, 'CPUStatus')])
 
     def _get_cpu_attr(self, cpu, attr_name):
-        return 'TODO'
-        #  return utils.get_wsman_resource_attr(
-        #  cpu, uris.DCIM_CPUView, attr_name)
+        return utils.get_wsman_wsinst_resource_attr(cpu, uris.CIM_Processor, attr_name)
 
     def list_memory(self):
-        raise NotImplementedError
         """Returns the list of installed memory
 
         :returns: a list of Memory objects
@@ -68,27 +61,16 @@ class InventoryManagement(object):
         :raises: DRACOperationFailed on error reported back by the DRAC
         """
 
-        #  doc = self.client.enumerate(uris.DCIM_MemoryView)
+        doc = self.client.enumerate(uris.CIM_PhysicalMemory)
 
-        #  installed_memory = utils.find_xml(doc, 'DCIM_MemoryView',
-        #  uris.DCIM_MemoryView,
-        #  find_all=True)
+        installed_memory = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items',
+                wsman.NS_MAP)
 
-        #  return [self._parse_memory(memory) for memory in installed_memory]
+        return [self._parse_memory(memory) for memory in installed_memory]
 
     def _parse_memory(self, memory):
-        pass
-        #  return Memory(id=self._get_memory_attr(memory, 'FQDD'),
-        #  size=int(self._get_memory_attr(memory, 'Size')),
-        #  speed=int(self._get_memory_attr(memory, 'Speed')),
-        #  manufacturer=self._get_memory_attr(memory,
-        #  'Manufacturer'),
-        #  model=self._get_memory_attr(memory, 'Model'),
-        #  status=PrimaryStatus[self._get_memory_attr(
-        #  memory,
-        #  'PrimaryStatus')])
+        return Memory(self._get_memory_attr(memory, 'ElementName'),
+                status=constants.HealthState[self._get_memory_attr(memory, 'HealthState')])
 
     def _get_memory_attr(self, memory, attr_name):
-        pass
-        #  return utils.get_wsman_resource_attr(memory, uris.DCIM_MemoryView,
-        #  attr_name)
+        return utils.get_wsman_wsinst_resource_attr(memory, uris.CIM_PhysicalMemory, attr_name)

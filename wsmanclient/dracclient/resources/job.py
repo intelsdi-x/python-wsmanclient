@@ -17,10 +17,6 @@ from wsmanclient.dracclient.resources import uris
 from wsmanclient import utils
 from wsmanclient import wsman
 
-Job = collections.namedtuple('Job', ['id', 'name', 'start_time', 'until_time',
-                                     'message', 'state', 'percent_complete'])
-
-
 class JobManagement(object):
 
     def __init__(self, client):

@@ -45,6 +45,12 @@ def find_xml(doc, item, namespace, find_all=False):
         return doc.findall(query)
     return doc.find(query)
 
+def get_wsman_wsinst_resource_attr(doc, resource_uri, attr_name, nullable=False):
+        #  found = doc.find('.//wsinst:'+attr_name, {'wsinst':resource_uri})
+        found = doc.find('wsinst:'+attr_name, {'wsinst':resource_uri})
+        if found is not None:
+            return found.text
+        return None
 
 def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False):
     """Find an attribute of a resource in an ElementTree object.

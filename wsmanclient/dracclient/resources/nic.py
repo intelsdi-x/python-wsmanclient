@@ -15,10 +15,6 @@ STATUS_MAP = {
     "3": "Disabled"
 }
 
-NICInterface = collections.namedtuple(
-    'NICInterface', ['id', 'description', 'product_name',
-                     'mac_address', 'linkspeed'])
-
 
 class NICManagement(object):
 

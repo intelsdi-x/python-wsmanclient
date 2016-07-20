@@ -38,3 +38,6 @@ CIM_PowerSupply = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
 
 CIM_NetworkPort = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
                    'CIM_NetworkPort')
+
+CIM_EthernetPort = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
+                   'CIM_EthernetPort')

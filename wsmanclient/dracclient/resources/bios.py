@@ -15,13 +15,12 @@ import collections
 import logging
 import re
 
-from wsmanclient import constants
 from wsmanclient import exceptions
+from wsmanclient.dracclient import constants
 from wsmanclient.dracclient.resources import lifecycle_controller
 from wsmanclient.dracclient.resources import uris
 from wsmanclient import utils
 from wsmanclient import wsman
-from wsmanclient.constants import PrimaryStatus
 
 LOG = logging.getLogger(__name__)
 
@@ -46,14 +45,6 @@ BOOT_MODE_IS_NEXT = {
 
 LC_CONTROLLER_VERSION_12G = (2, 0, 0)
 
-BootMode = collections.namedtuple('BootMode', ['id', 'name', 'is_current',
-                                               'is_next'])
-
-BootDevice = collections.namedtuple(
-    'BootDevice',
-    ['id',  'boot_mode', 'current_assigned_sequence',
-     'pending_assigned_sequence', 'bios_boot_string'])
-
 # http://en.community.dell.com/dell-groups/dtcmedia/m/mediagallery/20066940/download,
 # p. 11
 HEALTH_STATES = {
@@ -62,13 +53,6 @@ HEALTH_STATES = {
     '10': constants.HEALTH_DEGRADED,
     '25': constants.HEALTH_ERROR,
 }
-
-# See iDRAC Service Module - Windows Management Instrumentation.pdf for
-# more fields available
-PSU = collections.namedtuple(
-    'PSU',
-    ['id', 'description', 'last_system_inventory_time', 'last_update_time', 'primary_status'])
-
 
 class PowerManagement(object):
 

@@ -15,23 +15,15 @@ import collections
 import logging
 import re
 
-from wsmanclient import constants
 from wsmanclient import exceptions
-from wsmanclient.thinkserverclient.resources import lifecycle_controller
+from wsmanclient.thinkserverclient import constants
 from wsmanclient.thinkserverclient.resources import uris
 from wsmanclient import utils
 from wsmanclient import wsman
-from wsmanclient.constants import PrimaryStatus
+
+from wsmanclient.model import PSU
 
 LOG = logging.getLogger(__name__)
-
-POWER_STATES = {
-    '2': constants.POWER_ON,
-    '3': constants.POWER_OFF,
-    '11': constants.REBOOT,
-}
-
-REVERSE_POWER_STATES = dict((v, k) for (k, v) in POWER_STATES.items())
 
 BOOT_MODE_IS_CURRENT = {
     '1': True,
@@ -45,30 +37,6 @@ BOOT_MODE_IS_NEXT = {
 }
 
 LC_CONTROLLER_VERSION_12G = (2, 0, 0)
-
-BootMode = collections.namedtuple('BootMode', ['id', 'name', 'is_current',
-                                               'is_next'])
-
-BootDevice = collections.namedtuple(
-    'BootDevice',
-    ['id',  'boot_mode', 'current_assigned_sequence',
-     'pending_assigned_sequence', 'bios_boot_string'])
-
-# http://en.community.dell.com/dell-groups/dtcmedia/m/mediagallery/20066940/download,
-# p. 11
-HEALTH_STATES = {
-    '0': constants.HEALTH_UNKNOWN,
-    '5': constants.HEALTH_OK,
-    '10': constants.HEALTH_DEGRADED,
-    '25': constants.HEALTH_ERROR,
-}
-
-# See iDRAC Service Module - Windows Management Instrumentation.pdf for
-# more fields available
-PSU = collections.namedtuple(
-    'PSU',
-    ['id', 'description', 'last_system_inventory_time', 'last_update_time', 'primary_status'])
-
 
 class PowerManagement(object):
 
@@ -91,15 +59,10 @@ class PowerManagement(object):
         """
 
         doc = self.client.enumerate(uris.CIM_ComputerSystem)
-        #  nmmap = {
-        #  's' : 'http://www.w3.org/2003/05/soap-envelope',
-        #  'wsinst': 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_HostComputerSystem',
-        #  'wsen' : 'http://schemas.xmlsoap.org/ws/2004/09/enumeration',
-        #  'wsman':'http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd'
-        #  }
+
         enabled_state = doc.find(
             './/s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:EnabledState', wsman.NS_MAP_COMPUTER_SYSTEM)
-        return POWER_STATES[enabled_state.text]
+        return constants._get_enabled_state(enabled_state.text)
 
     def get_health_state(self):
         """Returns the current health state of the node
@@ -112,19 +75,39 @@ class PowerManagement(object):
         """
 
         doc = self.client.enumerate(uris.CIM_ComputerSystem)
+
         health_state = doc.find(
             './/s:Body/wsen:EnumerateResponse/wsman:Items/wsinst:CIM_HostComputerSystem/wsinst:HealthState', wsman.NS_MAP_COMPUTER_SYSTEM)
-        #  uris.DCIM_ComputerSystem)
-
-        #  print(health_state.text)
-        return HEALTH_STATES[health_state.text]
+        return constants._get_health_state(health_state.text)
 
     def set_power_state(self, target_state):
         raise NotImplementedError
 
     def list_power_supply_units(self):
-        raise NotImplementedError
+        """Returns the list of PSUs
 
+        :returns: a list of PSU objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+        """
+
+        doc = self.client.enumerate(uris.CIM_PowerSupply)
+
+        psus = doc.find('.//s:Body/wsen:EnumerateResponse/wsman:Items',
+                wsman.NS_MAP)
+
+        return [self._parse_psus(psu) for psu in psus]
+
+    def _parse_psus(self, psu):
+        return PSU(
+            self._get_psu_attr(psu, 'DeviceID'),
+            constants._get_health_state(self._get_psu_attr(psu, 'HealthState'))
+        )
+
+    def _get_psu_attr(self, psu, attr_name):
+        return utils.get_wsman_wsinst_resource_attr(psu, uris.CIM_PowerSupply,
+                attr_name)
 
 class BootManagement(object):
 

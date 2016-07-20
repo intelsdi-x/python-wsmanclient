@@ -15,12 +15,10 @@
 Wrapper for pywsman.Client
 """
 
-#  from wsmanclient import client
 import logging
 
 from wsmanclient.wsman import WSManClient
 from wsmanclient.base_client import BaseClient
-#  from wsmanclient.wsman import WSManClient
 from wsmanclient import exceptions
 from wsmanclient.dracclient.resources import bios
 from wsmanclient.dracclient.resources import inventory
