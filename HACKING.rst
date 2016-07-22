@@ -1,4 +1,4 @@
-python-dracclient Style Commandments
+python-wsmanclient.Style Commandments
 ====================================
 
 Read the OpenStack Style Commandments http://docs.openstack.org/developer/hacking/

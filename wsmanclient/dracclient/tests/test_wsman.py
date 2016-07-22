@@ -18,18 +18,17 @@ import lxml.etree
 import lxml.objectify
 import mock
 import requests_mock
-
-from dracclient import exceptions
-from dracclient.tests import base
-from dracclient.tests import utils as test_utils
-import dracclient.wsman
+import wsmanclient.wsman
+from wsmanclient import exceptions
+from wsmanclient.tests import utils as test_utils
+from wsmanclient.tests import base
 
 
 class ClientTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientTestCase, self).setUp()
-        self.client = dracclient.wsman.Client(**test_utils.FAKE_ENDPOINT)
+        self.client = wsmanclient.wsman.Client(**test_utils.FAKE_ENDPOINT)
 
     @requests_mock.Mocker()
     def test_enumerate(self, mock_requests):
@@ -40,7 +39,7 @@ class ClientTestCase(base.BaseTest):
         self.assertEqual('yay!', resp.text)
 
     def test_enumerate_with_request_failure(self):
-        self.client = dracclient.wsman.Client('malformed://^@*', 'user',
+        self.client = wsmanclient.wsman.Client('malformed://^@*', 'user',
                                               'pass')
 
         self.assertRaises(exceptions.WSManRequestFailure,
@@ -73,10 +72,10 @@ class ClientTestCase(base.BaseTest):
             1, len(resp_xml.findall('.//{%s}BazResource' % bar_resource_uri)))
         self.assertEqual(
             0, len(resp_xml.findall(
-                './/{%s}EnumerationContext' % dracclient.wsman.NS_WSMAN_ENUM)))
+                './/{%s}EnumerationContext' % wsmanclient.wsman.NS_WSMAN_ENUM)))
 
     @requests_mock.Mocker()
-    @mock.patch.object(dracclient.wsman.Client, 'pull', autospec=True)
+    @mock.patch.object(wsmanclient.wsman.Client, 'pull', autospec=True)
     def test_enumerate_with_auto_pull_without_optimization(self, mock_requests,
                                                            mock_pull):
         mock_requests.post('https://1.2.3.4:443/wsman',
@@ -113,10 +112,10 @@ class PayloadTestCase(base.BaseTest):
 
     def setUp(self):
         super(PayloadTestCase, self).setUp()
-        dracclient.wsman.NS_MAP = collections.OrderedDict([
-            ('s', dracclient.wsman.NS_SOAP_ENV),
-            ('wsa', dracclient.wsman.NS_WS_ADDR),
-            ('wsman', dracclient.wsman.NS_WSMAN)])
+        wsmanclient.wsman.NS_MAP = collections.OrderedDict([
+            ('s', wsmanclient.wsman.NS_SOAP_ENV),
+            ('wsa', wsmanclient.wsman.NS_WS_ADDR),
+            ('wsman', wsmanclient.wsman.NS_WSMAN)])
 
     @mock.patch.object(uuid, 'uuid4', autospec=True)
     def test_build_enum(self, mock_uuid):
@@ -144,7 +143,7 @@ class PayloadTestCase(base.BaseTest):
         expected_payload_obj = lxml.objectify.fromstring(expected_payload)
 
         mock_uuid.return_value = '1234-12'
-        payload = dracclient.wsman._EnumeratePayload(
+        payload = wsmanclient.wsman._EnumeratePayload(
             'http://host:443/wsman', 'http://resource_uri').build()
         payload_obj = lxml.objectify.fromstring(payload)
 
@@ -152,15 +151,15 @@ class PayloadTestCase(base.BaseTest):
                          lxml.etree.tostring(payload_obj))
 
     def test_enumerate_without_optimization(self):
-        payload = dracclient.wsman._EnumeratePayload(
+        payload = wsmanclient.wsman._EnumeratePayload(
             'http://host:443/wsman', 'http://resource_uri', optimization=False,
             max_elems=42).build()
         payload_xml = lxml.etree.fromstring(payload)
 
         optimize_enum_elems = payload_xml.findall(
-            './/{%s}OptimizeEnumeration' % dracclient.wsman.NS_WSMAN)
+            './/{%s}OptimizeEnumeration' % wsmanclient.wsman.NS_WSMAN)
         max_elem_elems = payload_xml.findall(
-            './/{%s}MaxElements' % dracclient.wsman.NS_WSMAN)
+            './/{%s}MaxElements' % wsmanclient.wsman.NS_WSMAN)
         self.assertEqual([], optimize_enum_elems)
         self.assertEqual([], max_elem_elems)
 
@@ -191,7 +190,7 @@ class PayloadTestCase(base.BaseTest):
         expected_payload_obj = lxml.objectify.fromstring(expected_payload)
 
         mock_uuid.return_value = '1234-12'
-        payload = dracclient.wsman._EnumeratePayload(
+        payload = wsmanclient.wsman._EnumeratePayload(
             'http://host:443/wsman', 'http://resource_uri',
             filter_query='DROP TABLE users', filter_dialect='cql').build()
         payload_obj = lxml.objectify.fromstring(payload)
@@ -202,7 +201,7 @@ class PayloadTestCase(base.BaseTest):
     def test_build_enum_with_invalid_filter_dialect(self):
         invalid_dialect = 'foo'
         self.assertRaises(exceptions.WSManInvalidFilterDialect,
-                          dracclient.wsman._EnumeratePayload,
+                          wsmanclient.wsman._EnumeratePayload,
                           'http://host:443/wsman', 'http://resource_uri',
                           filter_query='DROP TABLE users',
                           filter_dialect=invalid_dialect)
@@ -233,7 +232,7 @@ class PayloadTestCase(base.BaseTest):
         expected_payload_obj = lxml.objectify.fromstring(expected_payload)
 
         mock_uuid.return_value = '1234-12'
-        payload = dracclient.wsman._PullPayload('http://host:443/wsman',
+        payload = wsmanclient.wsman._PullPayload('http://host:443/wsman',
                                                 'http://resource_uri',
                                                 'context-uuid').build()
         payload_obj = lxml.objectify.fromstring(payload)
@@ -269,7 +268,7 @@ class PayloadTestCase(base.BaseTest):
         expected_payload_obj = lxml.objectify.fromstring(expected_payload)
 
         mock_uuid.return_value = '1234-12'
-        payload = dracclient.wsman._InvokePayload(
+        payload = wsmanclient.wsman._InvokePayload(
             'http://host:443/wsman', 'http://resource_uri', 'method',
             {'selector': 'foo'}, {'property': 'bar'}).build()
         payload_obj = lxml.objectify.fromstring(payload)
@@ -307,7 +306,7 @@ class PayloadTestCase(base.BaseTest):
         expected_payload_obj = lxml.objectify.fromstring(expected_payload)
 
         mock_uuid.return_value = '1234-12'
-        payload = dracclient.wsman._InvokePayload(
+        payload = wsmanclient.wsman._InvokePayload(
             'http://host:443/wsman', 'http://resource_uri', 'method',
             {'selector': 'foo'}, {'property': ['foo', 'bar', 'baz']}).build()
         payload_obj = lxml.objectify.fromstring(payload)

@@ -15,13 +15,10 @@ import collections
 import logging
 import re
 
-from dracclient import constants
-from dracclient import exceptions
-from dracclient.resources import lifecycle_controller
-from dracclient.resources import uris
-from dracclient import utils
-from dracclient import wsman
-from dracclient.constants import PrimaryStatus
+from wsmanclient import exceptions, utils, wsman
+from wsmanclient.model import PSU
+from wsmanclient.dracclient import constants
+from wsmanclient.dracclient.resources import lifecycle_controller, uris
 
 LOG = logging.getLogger(__name__)
 
@@ -46,14 +43,6 @@ BOOT_MODE_IS_NEXT = {
 
 LC_CONTROLLER_VERSION_12G = (2, 0, 0)
 
-BootMode = collections.namedtuple('BootMode', ['id', 'name', 'is_current',
-                                               'is_next'])
-
-BootDevice = collections.namedtuple(
-    'BootDevice',
-    ['id',  'boot_mode', 'current_assigned_sequence',
-     'pending_assigned_sequence', 'bios_boot_string'])
-
 # http://en.community.dell.com/dell-groups/dtcmedia/m/mediagallery/20066940/download,
 # p. 11
 HEALTH_STATES = {
@@ -62,13 +51,6 @@ HEALTH_STATES = {
     '10': constants.HEALTH_DEGRADED,
     '25': constants.HEALTH_ERROR,
 }
-
-# See iDRAC Service Module - Windows Management Instrumentation.pdf for
-# more fields available
-PSU = collections.namedtuple(
-    'PSU',
-    ['id', 'description', 'last_system_inventory_time', 'last_update_time', 'primary_status'])
-
 
 class PowerManagement(object):
 
@@ -92,6 +74,10 @@ class PowerManagement(object):
 
         filter_query = ('select EnabledState from '
                         'DCIM_ComputerSystem where Name="srv:system"')
+        #  filter_query = ('select EnabledState from '
+        #  'CIM_ComputerSystem')
+        #  doc = self.client.enumerate(uris.CIM_ComputerSystem,
+        #  filter_query=filter_query)
         doc = self.client.enumerate(uris.DCIM_ComputerSystem,
                                     filter_query=filter_query)
         enabled_state = utils.find_xml(doc, 'EnabledState',
@@ -116,7 +102,6 @@ class PowerManagement(object):
         health_state = utils.find_xml(doc, 'HealthState',
                                       uris.DCIM_ComputerSystem)
 
-        print(health_state.text)
         return HEALTH_STATES[health_state.text]
 
     def set_power_state(self, target_state):

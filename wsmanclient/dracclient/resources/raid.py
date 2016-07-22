@@ -13,9 +13,8 @@
 
 import collections
 
-from dracclient import exceptions
-from dracclient.resources import uris
-from dracclient import utils
+from wsmanclient import exceptions, utils
+from wsmanclient.dracclient.resources import uris
 
 RAID_LEVELS = {
     'non-raid': '1',
@@ -70,22 +69,6 @@ PHYSICAL_DISK_BUS_PROTOCOL = {
     '5': 'sata',
     '6': 'sas'
 }
-
-PhysicalDisk = collections.namedtuple(
-    'PhysicalDisk',
-    ['id', 'description', 'controller', 'manufacturer', 'model', 'media_type',
-     'interface_type', 'size_mb', 'free_size_mb', 'serial_number',
-     'firmware_version', 'state', 'raid_state'])
-
-RAIDController = collections.namedtuple(
-    'RAIDController', ['id', 'description', 'manufacturer', 'model',
-                       'firmware_version'])
-
-VirtualDisk = collections.namedtuple(
-    'VirtualDisk',
-    ['id', 'name', 'description', 'controller', 'raid_level', 'size_mb',
-     'state', 'raid_state', 'span_depth', 'span_length', 'pending_operations'])
-
 
 class RAIDManagement(object):
 

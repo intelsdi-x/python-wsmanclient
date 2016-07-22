@@ -11,24 +11,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import random
 import re
 
 import lxml.etree
 import mock
-import random
 import requests_mock
-
-import dracclient.client
-from dracclient import exceptions
-from dracclient.resources import bios
-from dracclient.resources import inventory
-import dracclient.resources.job
-from dracclient.resources import lifecycle_controller
-from dracclient.resources import raid
-from dracclient.resources import uris
-from dracclient.tests import base
-from dracclient.tests import utils as test_utils
-from dracclient import utils
+import wsmanclient.client
+import wsmanclient.resources.job
+from wsmanclient import exceptions, utils
+from wsmanclient.resources import (bios, inventory, lifecycle_controller, raid,
+                                   uris)
+from wsmanclient.tests import utils as test_utils
+from wsmanclient.tests import base
 
 
 @requests_mock.Mocker()
@@ -36,7 +31,7 @@ class ClientPowerManagementTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientPowerManagementTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     def test_get_power_state(self, mock_requests):
@@ -98,7 +93,7 @@ class ClientBootManagementTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientBootManagementTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     @requests_mock.Mocker()
@@ -190,7 +185,7 @@ class ClientBootManagementTestCase(base.BaseTest):
         self.assertIsNone(
             self.drac_client.change_boot_device_order('IPL', 'foo'))
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_change_boot_device_order_list(self, mock_invoke):
         expected_selectors = {'InstanceID': 'IPL'}
@@ -224,7 +219,7 @@ class ClientBIOSConfigurationTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientBIOSConfigurationTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     @requests_mock.Mocker()
@@ -286,7 +281,7 @@ class ClientBIOSConfigurationTestCase(base.BaseTest):
                           self.drac_client.list_bios_settings)
 
     @requests_mock.Mocker()
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_set_bios_settings(self, mock_requests, mock_invoke):
         expected_selectors = {'CreationClassName': 'DCIM_BIOSService',
@@ -428,7 +423,7 @@ class ClientJobManagementTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientJobManagementTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     @requests_mock.Mocker()
@@ -441,7 +436,7 @@ class ClientJobManagementTestCase(base.BaseTest):
 
         self.assertEqual(6, len(jobs))
 
-    @mock.patch.object(dracclient.client.WSManClient, 'enumerate',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'enumerate',
                        spec_set=True, autospec=True)
     def test_list_jobs_only_unfinished(self, mock_enumerate):
         expected_filter_query = ('select * from DCIM_LifecycleJob '
@@ -459,14 +454,14 @@ class ClientJobManagementTestCase(base.BaseTest):
             mock.ANY, uris.DCIM_LifecycleJob,
             filter_query=expected_filter_query)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'enumerate',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'enumerate',
                        spec_set=True, autospec=True)
     def test_get_job(self, mock_enumerate):
         expected_filter_query = ('select * from DCIM_LifecycleJob'
                                  ' where InstanceID="42"')
         # NOTE: This is the first job in the xml. Filtering the job is the
         #       responsibility of the controller, so not testing it.
-        expected_job = dracclient.resources.job.Job(id='JID_CLEARALL',
+        expected_job = wsmanclient.resources.job.Job(id='JID_CLEARALL',
                                                     name='CLEARALL',
                                                     start_time='TIME_NA',
                                                     until_time='TIME_NA',
@@ -483,7 +478,7 @@ class ClientJobManagementTestCase(base.BaseTest):
             filter_query=expected_filter_query)
         self.assertEqual(expected_job, job)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'enumerate',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'enumerate',
                        spec_set=True, autospec=True)
     def test_get_job_not_found(self, mock_enumerate):
         expected_filter_query = ('select * from DCIM_LifecycleJob'
@@ -498,7 +493,7 @@ class ClientJobManagementTestCase(base.BaseTest):
             filter_query=expected_filter_query)
         self.assertIsNone(job)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_create_config_job(self, mock_invoke):
         cim_creation_class_name = 'DCIM_BIOSService'
@@ -537,7 +532,7 @@ class ClientJobManagementTestCase(base.BaseTest):
             exceptions.DRACOperationFailed, self.drac_client.create_config_job,
             uris.DCIM_BIOSService, cim_creation_class_name, cim_name, target)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke', spec_set=True,
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke', spec_set=True,
                        autospec=True)
     def test_create_config_job_with_reboot(self, mock_invoke):
         cim_creation_class_name = 'DCIM_BIOSService'
@@ -564,7 +559,7 @@ class ClientJobManagementTestCase(base.BaseTest):
             expected_return_value=utils.RET_CREATED)
         self.assertEqual('JID_442507917525', job_id)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke', spec_set=True,
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke', spec_set=True,
                        autospec=True)
     def test_delete_pending_config(self, mock_invoke):
         cim_creation_class_name = 'DCIM_BIOSService'
@@ -607,10 +602,10 @@ class ClientBIOSChangesTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientBIOSChangesTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'create_config_job', spec_set=True, autospec=True)
     def test_commit_pending_bios_changes(self, mock_create_config_job):
         self.drac_client.commit_pending_bios_changes()
@@ -620,7 +615,7 @@ class ClientBIOSChangesTestCase(base.BaseTest):
             cim_creation_class_name='DCIM_BIOSService',
             cim_name='DCIM:BIOSService', target='BIOS.Setup.1-1', reboot=False)
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'create_config_job', spec_set=True, autospec=True)
     def test_commit_pending_bios_changes_with_reboot(self,
                                                      mock_create_config_job):
@@ -631,7 +626,7 @@ class ClientBIOSChangesTestCase(base.BaseTest):
             cim_creation_class_name='DCIM_BIOSService',
             cim_name='DCIM:BIOSService', target='BIOS.Setup.1-1', reboot=True)
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'delete_pending_config', spec_set=True, autospec=True)
     def test_abandon_pending_bios_changes(self, mock_delete_pending_config):
         self.drac_client.abandon_pending_bios_changes()
@@ -646,7 +641,7 @@ class ClientLifecycleControllerManagementTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientLifecycleControllerManagementTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     @requests_mock.Mocker()
@@ -666,7 +661,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientRAIDManagementTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     def test_list_raid_controllers(self, mock_requests):
@@ -741,7 +736,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             result += random.sample('.:-', 1)[0] + self._random_term()
         return result
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_convert_physical_disks_1(self, mock_requests, mock_invoke):
         '''Convert a single disk to RAID mode'''
@@ -764,7 +759,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             expected_selectors, expected_properties,
             expected_return_value=utils.RET_SUCCESS)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_convert_physical_disks_n(self, mock_requests, mock_invoke):
         '''Convert a number of disks to RAID mode'''
@@ -790,7 +785,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             expected_selectors, expected_properties,
             expected_return_value=utils.RET_SUCCESS)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_convert_physical_disks_nonraid_1(self, mock_requests,
                                               mock_invoke):
@@ -814,7 +809,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             expected_selectors, expected_properties,
             expected_return_value=utils.RET_SUCCESS)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_convert_physical_disks_nonraid_n(self, mock_requests,
                                               mock_invoke):
@@ -841,7 +836,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             expected_selectors, expected_properties,
             expected_return_value=utils.RET_SUCCESS)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_convert_physical_disks_ok(self, mock_requests, mock_invoke):
         '''Convert a number of disks to RAID mode and check the return value'''
@@ -885,7 +880,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
                             'Disk1:Enclosure-1:RAID-1'],
             raid_enable=True)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_create_virtual_disk(self, mock_requests, mock_invoke):
         expected_selectors = {'SystemCreationClassName': 'DCIM_ComputerSystem',
@@ -910,7 +905,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             expected_selectors, expected_properties,
             expected_return_value=utils.RET_SUCCESS)
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_create_virtual_disk_with_extra_params(self, mock_requests,
                                                    mock_invoke):
@@ -1008,7 +1003,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             physical_disks=['disk1', 'disk2'], raid_level='1', size_mb=42,
             disk_name='name', span_length=2, span_depth='foo')
 
-    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+    @mock.patch.object(wsmanclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
     def test_delete_virtual_disk(self, mock_requests, mock_invoke):
         expected_selectors = {'SystemCreationClassName': 'DCIM_ComputerSystem',
@@ -1038,7 +1033,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             exceptions.DRACOperationFailed,
             self.drac_client.delete_virtual_disk, 'disk1')
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'create_config_job', spec_set=True, autospec=True)
     def test_commit_pending_raid_changes(self, mock_requests,
                                          mock_create_config_job):
@@ -1049,7 +1044,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             cim_creation_class_name='DCIM_RAIDService',
             cim_name='DCIM:RAIDService', target='controller', reboot=False)
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'create_config_job', spec_set=True, autospec=True)
     def test_commit_pending_raid_changes_with_reboot(self, mock_requests,
                                                      mock_create_config_job):
@@ -1060,7 +1055,7 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             cim_creation_class_name='DCIM_RAIDService',
             cim_name='DCIM:RAIDService', target='controller', reboot=True)
 
-    @mock.patch.object(dracclient.resources.job.JobManagement,
+    @mock.patch.object(wsmanclient.resources.job.JobManagement,
                        'delete_pending_config', spec_set=True, autospec=True)
     def test_abandon_pending_bios_changes(self, mock_requests,
                                           mock_delete_pending_config):
@@ -1079,7 +1074,7 @@ class WSManClientTestCase(base.BaseTest):
         mock_requests.post('https://1.2.3.4:443/wsman',
                            text='<result>yay!</result>')
 
-        client = dracclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
+        client = wsmanclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
         resp = client.enumerate('http://resource')
         self.assertEqual('yay!', resp.text)
 
@@ -1092,7 +1087,7 @@ class WSManClientTestCase(base.BaseTest):
 """  # noqa
         mock_requests.post('https://1.2.3.4:443/wsman', text=xml)
 
-        client = dracclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
+        client = wsmanclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
         resp = client.invoke('http://resource', 'Foo')
         self.assertEqual('yay!', resp.find('result').text)
 
@@ -1105,7 +1100,7 @@ class WSManClientTestCase(base.BaseTest):
 """  # noqa
         mock_requests.post('https://1.2.3.4:443/wsman', text=xml)
 
-        client = dracclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
+        client = wsmanclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
         resp = client.invoke('http://resource', 'Foo',
                              expected_return_value='42')
         self.assertEqual('yay!', resp.find('result').text)
@@ -1119,7 +1114,7 @@ class WSManClientTestCase(base.BaseTest):
 """  # noqa
         mock_requests.post('https://1.2.3.4:443/wsman', text=xml)
 
-        client = dracclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
+        client = wsmanclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
         self.assertRaises(exceptions.DRACOperationFailed, client.invoke,
                           'http://resource', 'Foo')
 
@@ -1132,7 +1127,7 @@ class WSManClientTestCase(base.BaseTest):
 """  # noqa
         mock_requests.post('https://1.2.3.4:443/wsman', text=xml)
 
-        client = dracclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
+        client = wsmanclient.client.WSManClient(**test_utils.FAKE_ENDPOINT)
         self.assertRaises(exceptions.DRACUnexpectedReturnValue, client.invoke,
                           'http://resource', 'Foo',
                           expected_return_value='4242')
@@ -1143,7 +1138,7 @@ class ClientCPUTestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientCPUTestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     def test_list_cpus(self, mock_requests):
@@ -1172,7 +1167,7 @@ class ClientMemoryestCase(base.BaseTest):
 
     def setUp(self):
         super(ClientMemoryestCase, self).setUp()
-        self.drac_client = dracclient.client.DRACClient(
+        self.drac_client = wsmanclient.client.DRACClient(
             **test_utils.FAKE_ENDPOINT)
 
     def test_list_memory(self, mock_requests):

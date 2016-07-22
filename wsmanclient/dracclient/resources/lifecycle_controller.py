@@ -11,8 +11,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from dracclient.resources import uris
-from dracclient import utils
+from wsmanclient import utils
+from wsmanclient.dracclient.resources import uris
 
 
 class LifecycleControllerManagement(object):

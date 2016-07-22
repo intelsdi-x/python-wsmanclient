@@ -13,7 +13,7 @@
 
 import os
 
-from dracclient.resources import uris
+from wsmanclient.resources import uris
 
 FAKE_ENDPOINT = {
     'host': '1.2.3.4',

@@ -13,12 +13,8 @@
 
 import collections
 
-from dracclient.resources import uris
-from dracclient import utils
-from dracclient import wsman
-
-Job = collections.namedtuple('Job', ['id', 'name', 'start_time', 'until_time',
-                                     'message', 'state', 'percent_complete'])
+from wsmanclient import utils, wsman
+from wsmanclient.dracclient.resources import uris
 
 
 class JobManagement(object):
