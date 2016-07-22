@@ -16,6 +16,7 @@ import logging
 import re
 
 from wsmanclient import exceptions, utils, wsman
+from wsmanclient.model import PSU
 from wsmanclient.dracclient import constants
 from wsmanclient.dracclient.resources import lifecycle_controller, uris
 

@@ -3,6 +3,7 @@ import logging
 import re
 
 from wsmanclient import exceptions, utils, wsman
+from wsmanclient.model import NICInterface
 from wsmanclient.dracclient.resources import uris
 
 LOG = logging.getLogger(__name__)
@@ -44,16 +45,19 @@ class NICManagement(object):
 
     def _parse_drac_nic_interfaces(self, drac_nic_interface):
         return NICInterface(
-            id=self._get_nic_interface_attr(drac_nic_interface, 'FQDD'),
-            description=self._get_nic_interface_attr(
-                drac_nic_interface, 'DeviceDescription'),
-            product_name=self._get_nic_interface_attr(
-                drac_nic_interface, 'ProductName'),
-            mac_address=self._get_nic_interface_attr(
-                drac_nic_interface, 'PermanentMACAddress'),
-            linkspeed=self._get_nic_interface_attr(
-                drac_nic_interface, 'LinkSpeed')
-        )
+            self._get_nic_interface_attr(drac_nic_interface, 'FQDD'),None)
+        # TODO: Extend NICInterface object
+        #  return NICInterface(
+            #  id=self._get_nic_interface_attr(drac_nic_interface, 'FQDD'),
+            #  description=self._get_nic_interface_attr(
+                #  drac_nic_interface, 'DeviceDescription'),
+            #  product_name=self._get_nic_interface_attr(
+                #  drac_nic_interface, 'ProductName'),
+            #  mac_address=self._get_nic_interface_attr(
+                #  drac_nic_interface, 'PermanentMACAddress'),
+            #  linkspeed=self._get_nic_interface_attr(
+                #  drac_nic_interface, 'LinkSpeed')
+        #  )
 
     def _get_nic_interface_attr(self, drac_nic_interface, attr_name):
         return utils.get_wsman_resource_attr(

@@ -14,6 +14,7 @@
 import collections
 
 from wsmanclient import utils
+from wsmanclient.model import CPU, Memory
 from wsmanclient.dracclient import constants
 from wsmanclient.dracclient.resources import uris
 
@@ -39,27 +40,31 @@ class InventoryManagement(object):
         doc = self.client.enumerate(uris.DCIM_CPUView)
 
         cpus = utils.find_xml(doc, 'DCIM_CPUView',
-                              uris.DCIM_CPUView,
-                              find_all=True)
+                uris.DCIM_CPUView,
+                find_all=True)
 
         return [self._parse_cpus(cpu) for cpu in cpus]
 
     def _parse_cpus(self, cpu):
         return CPU(
-            id=self._get_cpu_attr(cpu, 'FQDD'),
-            cores=int(self._get_cpu_attr(cpu, 'NumberOfProcessorCores')),
-            speed=int(self._get_cpu_attr(cpu, 'CurrentClockSpeed')),
-            ht_enabled=bool(self._get_cpu_attr(cpu, 'HyperThreadingEnabled')),
-            model=self._get_cpu_attr(cpu, 'Model'),
-            status=PrimaryStatus[self._get_cpu_attr(cpu, 'PrimaryStatus')],
-            turbo_enabled=bool(self._get_cpu_attr(cpu, 'TurboModeEnabled')),
-            vt_enabled=bool(self._get_cpu_attr(cpu,
-                                               'VirtualizationTechnologyEnabled'))
-        )
+                self._get_cpu_attr(cpu, 'FQDD'),
+                constants.PrimaryStatus[self._get_cpu_attr(cpu, 'PrimaryStatus')])
+        # TODO(antoni): Extend CPU object
+                #  return CPU(
+                    #  id=self._get_cpu_attr(cpu, 'FQDD'),
+                    #  cores=int(self._get_cpu_attr(cpu, 'NumberOfProcessorCores')),
+                    #  speed=int(self._get_cpu_attr(cpu, 'CurrentClockSpeed')),
+                    #  ht_enabled=bool(self._get_cpu_attr(cpu, 'HyperThreadingEnabled')),
+                    #  model=self._get_cpu_attr(cpu, 'Model'),
+                    #  status=PrimaryStatus[self._get_cpu_attr(cpu, 'PrimaryStatus')],
+                    #  turbo_enabled=bool(self._get_cpu_attr(cpu, 'TurboModeEnabled')),
+                    #  vt_enabled=bool(self._get_cpu_attr(cpu,
+                                                       #  'VirtualizationTechnologyEnabled'))
+                #  )
 
     def _get_cpu_attr(self, cpu, attr_name):
         return utils.get_wsman_resource_attr(
-            cpu, uris.DCIM_CPUView, attr_name)
+                cpu, uris.DCIM_CPUView, attr_name)
 
     def list_memory(self):
         """Returns the list of installed memory
@@ -73,22 +78,27 @@ class InventoryManagement(object):
         doc = self.client.enumerate(uris.DCIM_MemoryView)
 
         installed_memory = utils.find_xml(doc, 'DCIM_MemoryView',
-                                          uris.DCIM_MemoryView,
-                                          find_all=True)
+                uris.DCIM_MemoryView,
+                find_all=True)
 
         return [self._parse_memory(memory) for memory in installed_memory]
 
     def _parse_memory(self, memory):
-        return Memory(id=self._get_memory_attr(memory, 'FQDD'),
-                      size=int(self._get_memory_attr(memory, 'Size')),
-                      speed=int(self._get_memory_attr(memory, 'Speed')),
-                      manufacturer=self._get_memory_attr(memory,
-                                                         'Manufacturer'),
-                      model=self._get_memory_attr(memory, 'Model'),
-                      status=PrimaryStatus[self._get_memory_attr(
-                          memory,
-                          'PrimaryStatus')])
+        return Memory(self._get_memory_attr(memory, 'FQDD'),
+                constants.PrimaryStatus[self._get_memory_attr(
+                    memory,
+                    'PrimaryStatus')])
+                # TODO(antoni): Extend Memory object
+        #  return Memory(id=self._get_memory_attr(memory, 'FQDD'),
+                      #  size=int(self._get_memory_attr(memory, 'Size')),
+                      #  speed=int(self._get_memory_attr(memory, 'Speed')),
+                      #  manufacturer=self._get_memory_attr(memory,
+                                                         #  'Manufacturer'),
+                      #  model=self._get_memory_attr(memory, 'Model'),
+                      #  status=PrimaryStatus[self._get_memory_attr(
+                          #  memory,
+                          #  'PrimaryStatus')])
 
     def _get_memory_attr(self, memory, attr_name):
         return utils.get_wsman_resource_attr(memory, uris.DCIM_MemoryView,
-                                             attr_name)
+                attr_name)
