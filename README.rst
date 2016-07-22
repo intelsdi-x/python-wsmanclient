@@ -1,9 +1,11 @@
-python-dracclient
-=================
+====================
+ python-wsmanclient
+ ====================
 
-Library for managing machines with Dell iDRAC cards.
+ Library for managing machines using WS-Management protocol (fork of [python-dracclient](https://github.com/openstack/python-dracclient)).
+ It currently supports machines with Dell iDRAC cards and Lenovo ThinkServer machines.
 
-* Free software: Apache license
-* Documentation: http://docs.openstack.org/developer/python-dracclient
-* Source: http://git.openstack.org/cgit/openstack/python-dracclient
-* Bugs: http://bugs.launchpad.net/python-dracclient
+ -----------------
+ License
+ -----------------
+ Code released under [the Apache licence](https://github.com/intelsdi-x/python-wsmanclient/blob/master/LICENSE).
