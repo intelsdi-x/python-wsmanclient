@@ -72,9 +72,18 @@ class Client(object):
                 data=payload,
                 # TODO(ifarkas): enable cert verification
                 verify=False)
-        except requests.exceptions.RequestException:
-            LOG.exception('Request failed')
-            raise exceptions.WSManRequestFailure()
+
+        except Exception as e:
+            # This is a hack for handling 'No route to host' ConnectionError,
+            # so that the Traceback would not be shown
+            if e.__class__ == 'requests.exceptions.ConnectionError':
+                LOG.exception('Request failed (ConnectionError)')
+                raise exceptions.WSManRequestFailure()
+            if e.__class__ == 'requests.exceptions.RequestException':
+                LOG.exception('Request failed')
+                raise exceptions.WSManRequestFailure()
+            else:
+                raise
 
         LOG.debug('Received response from %(endpoint)s: %(payload)s',
                   {'endpoint': self.endpoint, 'payload': resp.content})
