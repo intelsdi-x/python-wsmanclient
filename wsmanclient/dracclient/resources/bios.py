@@ -52,6 +52,16 @@ HEALTH_STATES = {
     '25': constants.HEALTH_ERROR,
 }
 
+# TODO: Use inherited objects instead of namedtuples
+BootMode = collections.namedtuple('BootMode', ['id', 'name', 'is_current',
+                                               'is_next'])
+
+BootDevice = collections.namedtuple(
+    'BootDevice',
+    ['id',  'boot_mode', 'current_assigned_sequence',
+     'pending_assigned_sequence', 'bios_boot_string'])
+
+
 class PowerManagement(object):
 
     def __init__(self, client):

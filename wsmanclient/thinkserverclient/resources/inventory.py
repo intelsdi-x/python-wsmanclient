@@ -46,7 +46,7 @@ class InventoryManagement(object):
 
     def _parse_cpus(self, cpu):
         return CPU(self._get_cpu_attr(cpu, 'DeviceID'),
-                status=constants.CPUStatus[self._get_cpu_attr(cpu, 'CPUStatus')])
+                status=constants.HealthState[int(self._get_cpu_attr(cpu, 'HealthState'))])
 
     def _get_cpu_attr(self, cpu, attr_name):
         return utils.get_wsman_wsinst_resource_attr(cpu, uris.CIM_Processor, attr_name)
